@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { GeneratePasswordsBody, GeneratePasswordsResponse } from "@workspace/api-zod";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { groq } from "../lib/groq";
 
 const router: IRouter = Router();
 
@@ -40,9 +40,9 @@ Do not include any text outside the JSON object.`;
 
   const userMessage = `Please analyze these previous passwords and generate 5 new memorable yet strong password suggestions:\n\n${passwordList}`;
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-5.2",
-    max_completion_tokens: 8192,
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    max_tokens: 8192,
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userMessage },
