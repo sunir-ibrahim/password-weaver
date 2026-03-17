@@ -5,18 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  ErrorResponse,
+  GeneratePasswordsBody,
+  GeneratePasswordsResponse,
+  HealthStatus,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +107,90 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Analyzes previous passwords and returns memorable, strong suggestions
+ * @summary Generate smart password suggestions
+ */
+export const getGeneratePasswordsUrl = () => {
+  return `/api/passwords/generate`;
+};
+
+export const generatePasswords = async (
+  generatePasswordsBody: GeneratePasswordsBody,
+  options?: RequestInit,
+): Promise<GeneratePasswordsResponse> => {
+  return customFetch<GeneratePasswordsResponse>(getGeneratePasswordsUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(generatePasswordsBody),
+  });
+};
+
+export const getGeneratePasswordsMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generatePasswords>>,
+    TError,
+    { data: BodyType<GeneratePasswordsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generatePasswords>>,
+  TError,
+  { data: BodyType<GeneratePasswordsBody> },
+  TContext
+> => {
+  const mutationKey = ["generatePasswords"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generatePasswords>>,
+    { data: BodyType<GeneratePasswordsBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return generatePasswords(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GeneratePasswordsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generatePasswords>>
+>;
+export type GeneratePasswordsMutationBody = BodyType<GeneratePasswordsBody>;
+export type GeneratePasswordsMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Generate smart password suggestions
+ */
+export const useGeneratePasswords = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generatePasswords>>,
+    TError,
+    { data: BodyType<GeneratePasswordsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generatePasswords>>,
+  TError,
+  { data: BodyType<GeneratePasswordsBody> },
+  TContext
+> => {
+  return useMutation(getGeneratePasswordsMutationOptions(options));
+};

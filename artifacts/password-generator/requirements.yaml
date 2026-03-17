@@ -1,0 +1,13 @@
+packages:
+  "framer-motion": "For page transitions, list animations, and the AI processing loading states"
+  "clsx": "Utility for conditionally joining classNames"
+  "tailwind-merge": "Utility for merging tailwind classes without conflicts"
+
+images:
+  - path: "artifacts/password-generator/public/images/cyber-bg.png"
+    description: "Abstract minimal dark cybersecurity background, glowing cyan geometric mesh, faint grid lines, moody, tech, and premium"
+    aspect_ratio: "16:9"
+
+notes:
+  - App enforces a premium dark mode design
+  - Uses @workspace/api-client-react for data fetching

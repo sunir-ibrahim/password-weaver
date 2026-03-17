@@ -8,3 +8,41 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface GeneratePasswordsBody {
+  /**
+   * List of up to 3 previous passwords
+   * @minItems 1
+   * @maxItems 3
+   */
+  previousPasswords: string[];
+}
+
+export type PasswordSuggestionStrength =
+  (typeof PasswordSuggestionStrength)[keyof typeof PasswordSuggestionStrength];
+
+export const PasswordSuggestionStrength = {
+  weak: "weak",
+  fair: "fair",
+  strong: "strong",
+  very_strong: "very_strong",
+} as const;
+
+export interface PasswordSuggestion {
+  password: string;
+  strength: PasswordSuggestionStrength;
+  /** Human-readable note on what makes it memorable */
+  memorabilityNote: string;
+  /** Human-readable note on what makes it strong */
+  strengthNote: string;
+}
+
+export interface GeneratePasswordsResponse {
+  suggestions: PasswordSuggestion[];
+  /** Summary of patterns found in the previous passwords */
+  analysisNote: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+}
