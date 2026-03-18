@@ -9,7 +9,7 @@ export function useGeneratePasswords() {
       onError: (error) => {
         toast({
           title: "Analysis Failed",
-          description: error.error || "An unexpected error occurred while analyzing passwords.",
+          description: error.data?.error || error.message || "An unexpected error occurred while analyzing passwords.",
           variant: "destructive",
         });
       },
