@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"],
+    "paths": {
+      "@workspace/api-zod": ["./lib/api-zod/src/index.ts"],
+      "@workspace/db": ["./lib/db/src/index.ts"]
+    }
+  },
+  "include": ["src"],
+  "references": [
+    {
+      "path": "./lib/api-zod"
+    },
+    {
+      "path": "./lib/db"
+    }
+  ]
+}
