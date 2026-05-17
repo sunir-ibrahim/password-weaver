@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development tsx --env-file=.env ./src/index.ts",
-    "start": "NODE_ENV=production tsx --env-file=.env ./src/index.ts",
+    "dev": "NODE_ENV=development tsx ./src/index.ts",
+    "start": "NODE_ENV=production tsx ./src/index.ts",
     "build": "echo 'Build skipped - using tsx'",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
