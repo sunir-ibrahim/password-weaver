@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 setupSwagger(app);
 
+// Development: proxy to frontend dev server
 if (process.env.NODE_ENV === "development") {
   app.use(
     createProxyMiddleware({
@@ -22,12 +23,6 @@ if (process.env.NODE_ENV === "development") {
       ws: true,
     })
   );
-} else {
-  const publicDir = path.resolve(import.meta.dirname, "../../frontend/password-generator/dist/public");
-  app.use(express.static(publicDir));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(publicDir, "index.html"));
-  });
 }
 
 export default app;
